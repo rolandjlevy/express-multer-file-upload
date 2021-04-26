@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Success</title>
+  <link href="styles/style.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+
+  <h3>Upload complete!</h3>
+
+  <p>The image '<%= originalname %>' (<%= size / 1000 %> kb) was uploaded successfully and saved to your uploads folder.</p>
+
+  <img src="<%= imgPath + filename %>" class="photo">
+
+  <section class="container">
+    <% files.forEach(file => { %>
+    <img src="<%= imgPath + file %>" class="photo thumb">
+    <% }); %>
+  </section>
+
+  <p><a href="/">Upload again</a></p>
+
+</body>
+</html>

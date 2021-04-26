@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 400px;
+}
+
+.photo {
+  width: 400px;
+  height: 400px;
+  object-fit: contain;
+}
+
+.photo.thumb {
+  width: 40px;
+  height: 40px;
+}
