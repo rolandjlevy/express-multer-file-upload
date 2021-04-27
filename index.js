@@ -3,6 +3,7 @@ const url = require('url');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
+const sharp = require('sharp');
 const { promisify } = require('util');
 const readFileAsync = promisify(fs.readFile)
 const writeFileAsync = promisify(fs.writeFile)
@@ -71,9 +72,55 @@ app.post('/upload', (req, res) => {
       const error = new Error(`An unknown error occurred when uploading`);
       return next(error);
     }
+    
     const files = fs.readdirSync(__dirname + '/public/uploads');
     const { filename, originalname, size } = req.file;
     const imgPath = fullUrl(req) + '/uploads/';
+    const thumbsPath = fullUrl(req) + '/thumbnails/';
+    const input = imgPath + filename;
+
+    // let test = async () => {
+    //   console.log({input})
+    //   await sharp(input)
+    //   .resize({
+    //     fit:sharp.fit.cover
+    //   })
+    //   .sharpen()
+    //   .toBuffer()
+    //   .then(data => { 
+    //     console.log(data);
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
+    // };
+
+    // test();
+
+    // sharp(input)
+    // .toBuffer()
+    // .then(data => { console.log(data); })
+    // .catch(err => { console.log(err); });
+
+    // sharp(imgPath + filename)
+    // .toFile('output.png')
+    // .then(info => { 
+    //   console.log({info});
+    //  })
+    // .catch(err => { 
+    //   console.log({err});
+    //  });
+
+    // sharp(imgPath + filename)
+    // .resize(200, 200, {
+    //   fit: sharp.fit.cover,
+    //   withoutEnlargement: true
+    // })
+    // .toFormat('jpeg')
+    // .toBuffer()
+    // .then((outputBuffer) => {
+    //   console.log('done')
+    // });
     res.render('pages/success', { files, filename, originalname, size, imgPath });
   });
 });
