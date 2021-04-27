@@ -2,18 +2,33 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image upload</title>
-  <link href="styles/style.css" type="text/css" rel="stylesheet">
+  <%- include('../partials/head') %>
 </head>
 
 <body>
 
-  <form action="/upload" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" accept="image/*" />
-    <input type="submit" value="Upload file" />
-  </form>
+  <main class="main-wrapper">
+
+    <%- include('../partials/nav'); %>
+
+    <header>
+      <h1>Image uploader</h1>
+      Using Node, Express and Multer to upload and display images.
+    </header>
+    
+    <section class="content">
+
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" />
+        <input type="submit" value="Upload file" />
+      </form>
+
+    </section>
+
+    <%- include('../partials/footer'); %>
+
+  </main>
 
 </body>
 </html>

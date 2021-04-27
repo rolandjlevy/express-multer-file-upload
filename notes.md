@@ -1,3 +1,10 @@
+## TODO
+
+#### use Sharp to create thumbnail images
+- https://www.npmjs.com/package/sharp
+- https://sharp.pixelplumbing.com/
+
+
 > File upload with Multer: 
 * [npm](https://www.npmjs.com/package/multer)
 * [Good tutorial](https://medium.com/@TheJesseLewis/how-to-make-a-basic-html-form-file-upload-using-multer-in-an-express-node-js-app-16dac2476610)

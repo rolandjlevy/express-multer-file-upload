@@ -3,6 +3,9 @@ const url = require('url');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
+const { promisify } = require('util');
+const readFileAsync = promisify(fs.readFile)
+const writeFileAsync = promisify(fs.writeFile)
 const port = 4040;
 
 const app = express();
@@ -73,7 +76,6 @@ app.post('/upload', (req, res) => {
     const imgPath = fullUrl(req) + '/uploads/';
     res.render('pages/success', { files, filename, originalname, size, imgPath });
   });
-  
 });
 
 app.get('/uploads/file-(*)?', (req, res) => {

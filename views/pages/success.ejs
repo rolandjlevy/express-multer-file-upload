@@ -2,27 +2,41 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Success</title>
-  <link href="styles/style.css" type="text/css" rel="stylesheet">
+  <%- include('../partials/head') %>
 </head>
 
 <body>
 
-  <h3>Upload complete!</h3>
+  <main class="main-wrapper">
 
-  <p>The image '<%= originalname %>' (<%= size / 1000 %> kb) was uploaded successfully and saved to your uploads folder.</p>
+    <%- include('../partials/nav'); %>
 
-  <img src="<%= imgPath + filename %>" class="photo">
+    <header>
+      <h1>Upload complete!</h1>
+      Using Node, Express and Multer to upload and display images.
+    </header>
+    
+    <section>
 
-  <section class="container">
-    <% files.forEach(file => { %>
-    <img src="<%= imgPath + file %>" class="photo thumb">
-    <% }); %>
-  </section>
+      <p>The image '<%= originalname %>' (<%= size / 1000 %> kb) was uploaded successfully and saved to your uploads folder.</p>
+      
+      <p><a href="/">Upload again</a></p>
 
-  <p><a href="/">Upload again</a></p>
+      <img src="<%= imgPath + filename %>" class="latest-photo">
+
+      <ul class="photo-container">
+        <% files.forEach(file => { %>
+        <li><img src="<%= imgPath + file %>" class="photo"></li>
+        <% }); %>
+      </ul>
+
+    </section>
+
+    <%- include('../partials/footer'); %>
+
+  </main>
 
 </body>
+
 </html>
