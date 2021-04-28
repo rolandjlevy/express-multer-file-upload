@@ -91,7 +91,6 @@ app.post('/upload', (req, res) => {
         .then(metadata => {
           console.log(metadata, metadata.width, metadata.height);
           const angle = angles[String(metadata.orientation)] || 0;
-          console.log({angle});
           const thumbSize = 100;
           return image.resize(thumbSize, thumbSize, {
             fit:sharp.fit.cover,
