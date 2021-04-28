@@ -94,7 +94,8 @@ app.post('/upload', (req, res) => {
         .toFormat('jpeg')
         .jpeg()
         .toFile(thumbsPath)
-        const thumbnails = fs.readdirSync(__dirname + '/public/thumbnails');
+        let thumbnails = fs.readdirSync(__dirname + '/public/thumbnails');
+        thumbnails = thumbnails.filter(item => item !== filename);
         res.render('pages/success', {
           thumbnails, 
           filename,
@@ -102,7 +103,7 @@ app.post('/upload', (req, res) => {
           size,
           currentUrl:fullUrl(req)
         });
-        console.log({info})
+        console.log({info});
       } catch (err) {
         console.log({err});
       }
