@@ -23,11 +23,11 @@
       
       <p><a href="/">Upload again</a></p>
 
-      <img src="<%= imgPath + filename %>" class="latest-photo">
+      <img src="<%= currentUrl + '/images/' + filename %>" class="latest-photo">
 
       <ul class="photo-container">
-        <% files.forEach(file => { %>
-        <li><img src="<%= imgPath + file %>" class="photo"></li>
+        <% thumbnails.forEach(thumb => { %>
+        <li><img src="<%= currentUrl + '/thumbnails/' + thumb %>" class="photo"></li>
         <% }); %>
       </ul>
 

@@ -4,11 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const sharp = require('sharp');
-const { promisify } = require('util');
-const readFileAsync = promisify(fs.readFile)
-const writeFileAsync = promisify(fs.writeFile)
+const { v4:uuidv4 } = require('uuid');
 const port = 4040;
-
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -25,17 +22,18 @@ app.get('/', (req, res) => {
   res.render('pages/index');
 });
 
+// add to Multer class
 const multerConfig = {
   storage: multer.diskStorage({
     destination: (req, file, next) => {
-      next(null, './public/uploads');
+      next(null, './public/images');
     },
     // specify the filename to be unique
     filename: (req, file, next) => {
-      // get the file mimetype ie 'image/jpeg' split and prefer the second value ie 'jpeg'
+      // get file mimetype 'image/jpeg' split and get second value ie 'jpeg'
       const ext = file.mimetype.split('/')[1];
       // set the file fieldname to a unique name
-      next(null, `${file.fieldname}-${Date.now()}.${ext}`);
+      next(null, `${file.fieldname}-${uuidv4()}.${ext}`);
     }
   }),
 
@@ -56,11 +54,18 @@ const multerConfig = {
 
 const upload = multer(multerConfig).single('file');
 
+// add to Utils class
 const fullUrl = (req) => {
   return url.format({
     protocol: req.protocol,
     host: req.get('host')
   });
+}
+
+// add to Utils class
+const getPath = (folderName, filename) => {
+  const folderPath = path.join(__dirname, `/public/${folderName}`);
+  return path.resolve(folderPath + '/' + filename);
 }
 
 app.post('/upload', (req, res) => {
@@ -73,59 +78,39 @@ app.post('/upload', (req, res) => {
       return next(error);
     }
     
-    const files = fs.readdirSync(__dirname + '/public/uploads');
     const { filename, originalname, size } = req.file;
-    const imgPath = fullUrl(req) + '/uploads/';
-    const thumbsPath = fullUrl(req) + '/thumbnails/';
-    const input = imgPath + filename;
-
-    // let test = async () => {
-    //   console.log({input})
-    //   await sharp(input)
-    //   .resize({
-    //     fit:sharp.fit.cover
-    //   })
-    //   .sharpen()
-    //   .toBuffer()
-    //   .then(data => { 
-    //     console.log(data);
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
-    // };
-
-    // test();
-
-    // sharp(input)
-    // .toBuffer()
-    // .then(data => { console.log(data); })
-    // .catch(err => { console.log(err); });
-
-    // sharp(imgPath + filename)
-    // .toFile('output.png')
-    // .then(info => { 
-    //   console.log({info});
-    //  })
-    // .catch(err => { 
-    //   console.log({err});
-    //  });
-
-    // sharp(imgPath + filename)
-    // .resize(200, 200, {
-    //   fit: sharp.fit.cover,
-    //   withoutEnlargement: true
-    // })
-    // .toFormat('jpeg')
-    // .toBuffer()
-    // .then((outputBuffer) => {
-    //   console.log('done')
-    // });
-    res.render('pages/success', { files, filename, originalname, size, imgPath });
+    const imagePath = getPath('images', filename);
+    const thumbsPath = getPath('thumbnails', filename);
+    
+    (async () => {
+      try {
+        const thumbSize = 100;
+        const info = await sharp(imagePath)
+        .resize(thumbSize, thumbSize, {
+          fit:sharp.fit.cover,
+          withoutEnlargement: true
+        })
+        .sharpen()
+        .toFormat('jpeg')
+        .jpeg()
+        .toFile(thumbsPath)
+        const thumbnails = fs.readdirSync(__dirname + '/public/thumbnails');
+        res.render('pages/success', {
+          thumbnails, 
+          filename,
+          originalname, 
+          size,
+          currentUrl:fullUrl(req)
+        });
+        console.log({info})
+      } catch (err) {
+        console.log({err});
+      }
+    })();
   });
 });
 
-app.get('/uploads/file-(*)?', (req, res) => {
+app.get('/images/file-(*)?', (req, res) => {
   res.write('ok');
 });
 
