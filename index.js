@@ -89,7 +89,6 @@ app.post('/upload', (req, res) => {
         const image = await sharp(imagePath)
         image.metadata()
         .then(metadata => {
-          console.log(metadata, metadata.width, metadata.height);
           const angle = angles[String(metadata.orientation)] || 0;
           const thumbSize = 100;
           return image.resize(thumbSize, thumbSize, {
