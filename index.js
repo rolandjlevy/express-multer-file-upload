@@ -82,18 +82,28 @@ app.post('/upload', (req, res) => {
     const imagePath = getPath('images', filename);
     const thumbsPath = getPath('thumbnails', filename);
     
+    const angles = { '1':0, '2':0, '3':180, '4':180, '5':90, '6':90, '7':270, '8':270 };
+
     (async () => {
       try {
-        const thumbSize = 100;
-        const info = await sharp(imagePath)
-        .resize(thumbSize, thumbSize, {
-          fit:sharp.fit.cover,
-          withoutEnlargement: true
-        })
-        .sharpen()
-        .toFormat('jpeg')
-        .jpeg()
-        .toFile(thumbsPath)
+        const image = await sharp(imagePath)
+        image.metadata()
+        .then(metadata => {
+          console.log(metadata, metadata.width, metadata.height);
+          const angle = angles[String(metadata.orientation)] || 0;
+          console.log({angle});
+          const thumbSize = 100;
+          return image.resize(thumbSize, thumbSize, {
+            fit:sharp.fit.cover,
+            withoutEnlargement: true
+          })
+          .rotate(angle)
+          .sharpen()
+          .toFormat('jpeg')
+          .jpeg()
+          .toFile(thumbsPath)
+        });
+        
         let thumbnails = fs.readdirSync(__dirname + '/public/thumbnails');
         thumbnails = thumbnails.filter(item => item !== filename);
         res.render('pages/success', {
@@ -103,7 +113,7 @@ app.post('/upload', (req, res) => {
           size,
           currentUrl:fullUrl(req)
         });
-        console.log({info});
+        // console.log({image});
       } catch (err) {
         console.log({err});
       }
