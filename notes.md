@@ -1,8 +1,7 @@
 ## TODO
 
-[-] Fix rotation issue
 [-] When someone clicks on a thumbnail image it displays the original 
-
+[+] Fix rotation issue
 [+] use Sharp to create thumbnail images
 - https://www.npmjs.com/package/sharp
 - https://sharp.pixelplumbing.com/
